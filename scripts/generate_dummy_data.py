@@ -12,7 +12,18 @@ NUM_SCRAPS = 4000
 
 LEVELS = ['초급', '중급', '고급']
 GENDERS = ['남자', '여자']
-CATEGORIES = ['경제', '사회', '국제', '문화', '연예', '스포츠', 'IT', '과학', '생활']
+CATEGORIES = ['US',
+              'World',
+              'Pollitics',
+              'Business',
+              'Heallth',
+              'Entertainment',
+              'Style',
+              'Travel',
+              'Sports',
+              'Science',
+              'Climate',
+              'Weather']
 SCORE_PROB = {'like': 0.2, 'scrap': 0.5, 'wrong_answer': 0.3}
 
 today = datetime.today()
@@ -45,9 +56,8 @@ news = []
 for i in range(1, NUM_NEWS + 1):
     news.append({
         'news_id': i,
-        'title': fake.sentence(nb_words=6),
         'category': random.choice(CATEGORIES),
-        'publishedDate': fake.date_time_between(start_date='-30d', end_date='now')
+        'published_at': fake.date_time_between(start_date='-30d', end_date='now')
     })
 
 # 3. scrap.csv (흥미 카테고리에 따른 점수 확률 반영)

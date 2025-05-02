@@ -3,17 +3,23 @@ import lightgbm as lgb
 import pickle
 import os
 import numpy as np
-
+from datetime import datetime
 from lightgbm import early_stopping, log_evaluation
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 
+# 오늘 날짜 폴더 설정
+today_str = datetime.today().strftime('%Y-%m-%d')
+DATA_DIR = f"../data/{today_str}"
+MODEL_DIR = f"../models/{today_str}"
+os.makedirs(MODEL_DIR, exist_ok=True)
+
 # 경로 설정
-USER_CSV = "../data/users.csv"
-NEWS_CSV = "../data/news.csv"
-SCRAP_CSV = "../data/scrap.csv"
-INTEREST_CSV = "../data/user_interest.csv"
-MODEL_PATH = "../models/lightgbm_model.pkl"
+USER_CSV = os.path.join(DATA_DIR, "users.csv")
+NEWS_CSV = os.path.join(DATA_DIR, "news.csv")
+SCRAP_CSV = os.path.join(DATA_DIR, "scrap.csv")
+INTEREST_CSV = os.path.join(DATA_DIR, "user_interest.csv")
+MODEL_PATH = os.path.join(MODEL_DIR, "lightgbm_model.pkl")
 
 # 1. 데이터 불러오기
 users = pd.read_csv(USER_CSV)
@@ -23,7 +29,7 @@ interests = pd.read_csv(INTEREST_CSV)
 
 # 2. 점수 매핑
 score_map = {'like': 100, 'scrap': 50, 'wrong_answer': 1}
-scrap['score'] = scrap['type'].map(score_map)
+scrap['score'] = scrap['status'].map(score_map)
 
 # 3. 흥미 여부 계산을 위한 중간 병합
 news_cat = news[['news_id', 'category']]
