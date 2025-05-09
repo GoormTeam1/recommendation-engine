@@ -1,7 +1,11 @@
 import pandas as pd
 from sqlalchemy import create_engine
 from datetime import datetime
+from dotenv import load_dotenv
 import os
+
+load_dotenv()  # .env 파일을 읽어 환경변수로 설정
+
 
 # 날짜별 디렉토리 생성
 today_str = datetime.today().strftime('%Y-%m-%d')
@@ -9,8 +13,8 @@ output_dir = f"../data/{today_str}"
 os.makedirs(output_dir, exist_ok=True)
 
 # 뉴스 DB 연결
-news_db_url = 'mysql+pymysql://admin:admin123@groom-testdb.cwgqxhxd5s72.ap-northeast-2.rds.amazonaws.com/news_db'
-news_engine = create_engine(news_db_url)
+news_db_url = os.getenv("DB_URL_NEWS")
+news_engine = create_engine(os.getenv("DB_URL_NEWS"))
 
 # 테이블별 쿼리와 파일명
 queries = {

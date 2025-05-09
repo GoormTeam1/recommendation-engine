@@ -25,7 +25,7 @@ MODEL_PATH = os.path.join(MODEL_DIR, "lightgbm_model.pkl")
 users = pd.read_csv(USER_CSV)
 news = pd.read_csv(NEWS_CSV)
 scrap = pd.read_csv(SCRAP_CSV)
-interests = pd.read_csv(INTEREST_CSV)
+user_interests = pd.read_csv(INTEREST_CSV)
 
 # 2. 점수 매핑
 score_map = {'like': 100, 'scrap': 50, 'wrong_answer': 1}
@@ -34,7 +34,7 @@ scrap['score'] = scrap['status'].map(score_map)
 # 3. 흥미 여부 계산을 위한 중간 병합
 news_cat = news[['news_id', 'category']]
 temp = scrap.merge(news_cat, on='news_id', how='left') \
-            .merge(interests, on='user_id', how='left', suffixes=('', '_interest'))
+            .merge(user_interests, on='user_id', how='left', suffixes=('', '_interest'))
 
 temp['interest_match'] = (temp['category'] == temp['category_interest']).astype(int)
 

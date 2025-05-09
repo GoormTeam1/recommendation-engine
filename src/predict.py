@@ -29,19 +29,24 @@ if 'news_view_count' not in news.columns:
     news['news_view_count'] = 0
 news['news_view_count'] = np.log1p(news['news_view_count'])
 
-# 3. 사용자 × 뉴스 조합 생성 + 흥미 여부
+# 3. 사용자 × 뉴스 조합 생성 + 레벨 필터 + 흥미 여부
 candidate_rows = []
 for _, user in users.iterrows():
     user_id = user['user_id']
+    user_level = user['level']
     user_interests = interests[interests['user_id'] == user_id]['category'].tolist()
 
     for _, article in news.iterrows():
+        # ✅ 사용자 레벨과 뉴스 레벨이 다르면 제외
+        if user_level != article['level']:
+            continue
+
         interest_match = int(article['category'] in user_interests)
         candidate_rows.append({
             'user_id': user_id,
             'news_id': article['news_id'],
             'gender': user['gender'],
-            'level': user['level'],
+            'level': user_level,
             'age': user['age'],
             'category': article['category'],
             'news_view_count': article['news_view_count'],
@@ -63,7 +68,7 @@ if not os.path.exists(MODEL_PATH):
 with open(MODEL_PATH, 'rb') as f:
     model = pickle.load(f)
 
-# 6. 예측 및 최신성 가중치
+# 6. 예측 + 최근성 가중치 적용
 feature_cols = ['gender', 'level', 'category', 'age', 'interest_match', 'news_view_count']
 df_pred['score'] = model.predict(df_pred[feature_cols])
 
