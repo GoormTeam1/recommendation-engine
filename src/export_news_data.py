@@ -19,7 +19,7 @@ news_engine = create_engine(os.getenv("DB_URL_NEWS"))
 # 테이블별 쿼리와 파일명
 queries = {
     "scrab": {
-        "sql": "SELECT user_id, news_id, status FROM scrab",
+        "sql": "SELECT user_email, news_id, status FROM scrab",
         "filename": "scrap.csv"
     },
     "news": {

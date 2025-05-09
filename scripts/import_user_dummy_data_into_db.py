@@ -27,7 +27,7 @@ def generate_dummy_user():
 
 dummy_user = generate_dummy_user()
 
-url = "http://localhost:8080/api/user/signup"  # 실제 API 경로로 수정
+url = "http://172.16.24.75:8080/api/user/signup"  # 실제 API 경로로 수정
 
 response = requests.post(url, json=dummy_user)
 
