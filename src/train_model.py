@@ -22,7 +22,7 @@ INTEREST_CSV = os.path.join(DATA_DIR, "user_interest.csv")
 MODEL_PATH = os.path.join(MODEL_DIR, "lightgbm_model.pkl")
 
 # 1. 데이터 불러오기
-users = pd.read_csv(USER_CSV).rename(columns={'id': 'user_id'})
+users = pd.read_csv(USER_CSV).rename(columns={'user_id': 'user_id'})
 news = pd.read_csv(NEWS_CSV)
 scrap = pd.read_csv(SCRAP_CSV)
 user_interests = pd.read_csv(INTEREST_CSV).rename(columns={'category_id': 'category_interest'})
@@ -36,7 +36,7 @@ def calculate_age(birth_str):
 users['age'] = users['birth_date'].apply(calculate_age)
 
 # 3. scrap에 user_id 붙이기
-scrap = scrap.merge(users[['user_id', 'email']], left_on='user_email', right_on='email', how='left')
+scrap = scrap.merge(users[['user_id', 'user_email']], left_on='user_email', right_on='user_email', how='left')
 missing_ids = scrap['user_id'].isna().sum()
 if missing_ids > 0:
     print(f"⚠️ user_id가 없는 행 수: {missing_ids}")

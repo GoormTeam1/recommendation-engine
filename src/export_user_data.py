@@ -38,8 +38,8 @@ def ensure_table_exists(engine, table_name, create_sql):
 # 테이블 생성 SQL 정의
 create_user_table_sql = """
 CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    email VARCHAR(255) UNIQUE NOT NULL,
+    user_id SERIAL PRIMARY KEY,
+    user_email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     username VARCHAR(255) NOT NULL,
     level VARCHAR(50),
@@ -72,7 +72,7 @@ tables = {
 # for table_name, info in tables.items():
 #     ensure_table_exists(user_engine, table_name, info["create_sql"])
 try:
-    df = pd.read_sql(f"SELECT id,birth_date,create_at,email,gender,level FROM users", user_engine)
+    df = pd.read_sql(f"SELECT user_id,birth_date,create_at,user_email,gender,level FROM users", user_engine)
     print(df)
     df.to_csv(os.path.join(output_dir, "users.csv"), index=False)
     print(f"[→] users → {output_dir}/users")
