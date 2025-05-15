@@ -20,7 +20,6 @@ if __name__ == "__main__":
         "predict.py",
         "import_recommendation_data.py",
         "import_default_recommendation_data.py",
-        "consumer.py"
     ]
 
     for script in scripts:

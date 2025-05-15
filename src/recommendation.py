@@ -49,8 +49,16 @@ def generate_recommendation_for_user(user):
 
     scores = model.predict(df)
     news_df["score"] = scores
+    news_df["interest_match"] = df["interest_match"]  # 일치 여부도 포함
 
-    top_news = news_df.sort_values(by="score", ascending=False).head(10)
+    # ① 관심 일치 뉴스 중 상위 7개
+    matched = news_df[news_df["interest_match"] == 1].sort_values(by="score", ascending=False).head(7)
+
+    # ② 관심 불일치 뉴스 중 상위 3개
+    unmatched = news_df[news_df["interest_match"] == 0].sort_values(by="score", ascending=False).head(3)
+
+    # ③ 합치기
+    top_news = pd.concat([matched, unmatched])
 
     # Redis 저장
     key = f"recommendation:{user['userId']}"
