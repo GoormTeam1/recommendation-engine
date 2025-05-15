@@ -25,7 +25,7 @@ CATEGORIES = ['us',
 today_str = date.today().isoformat()  # 예: '2025-05-02'
 
 # 경로 조합
-csv_path = os.path.join("data", today_str, "recommendations.csv")
+csv_path = os.path.join("../data", today_str, "recommendations.csv")
 
 # CSV 읽기
 df = pd.read_csv(csv_path)

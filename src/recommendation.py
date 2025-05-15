@@ -11,8 +11,8 @@ r = redis.Redis(host='localhost', port=6379, db=0)
 
 # 모델 불러오기
 today_str = datetime.today().strftime('%Y-%m-%d')
-output_model_dir = f"models/{today_str}"
-output_news_dir = f"data/{today_str}"
+output_model_dir = f"../models/{today_str}"
+output_news_dir = f"../data/{today_str}"
 with open(output_model_dir + "/lightgbm_model.pkl", "rb") as f:
     model = pickle.load(f)
 

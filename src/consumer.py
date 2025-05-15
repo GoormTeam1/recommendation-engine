@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from kafka import KafkaConsumer
 import json
 from recommendation import generate_recommendation_for_user
@@ -7,7 +9,7 @@ consumer = KafkaConsumer(
     'user.signup',
     'user.updateInterest',
     bootstrap_servers='localhost:9092',
-    group_id='recommendation-consumer',
+    group_id='recommendation-consumer-' + str(uuid4()),
     value_deserializer=lambda m: json.loads(m.decode('utf-8'))
 )
 

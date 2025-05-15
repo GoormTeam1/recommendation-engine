@@ -19,7 +19,8 @@ if __name__ == "__main__":
         "train_model.py",
         "predict.py",
         "import_recommendation_data.py",
-        "import_default_recommendation_data.py"
+        "import_default_recommendation_data.py",
+        "consumer.py"
     ]
 
     for script in scripts:

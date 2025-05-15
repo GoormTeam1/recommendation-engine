@@ -23,7 +23,7 @@ CATEGORIES = ['us',
 
 def import_default_recommendation_data():
     today_str = date.today().isoformat()
-    csv_path = os.path.join("data", today_str, "news.csv")
+    csv_path = os.path.join("../data", today_str, "news.csv")
 
     # CSV 읽기
     df = pd.read_csv(csv_path)
