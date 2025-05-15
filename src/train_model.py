@@ -40,9 +40,8 @@ scrap = scrap.merge(users[['user_id', 'user_email']], left_on='user_email', righ
 missing_ids = scrap['user_id'].isna().sum()
 if missing_ids > 0:
     print(f"⚠️ user_id가 없는 행 수: {missing_ids}")
-
 # 4. 점수 매핑
-score_map = {'like': 100, 'scrap': 50, 'wrong_answer': 1}
+score_map = {'읽고싶음': 10, 'scrap': 50, 'wrong': 20}
 scrap['score'] = scrap['status'].map(score_map)
 
 # 5. 흥미 여부 계산

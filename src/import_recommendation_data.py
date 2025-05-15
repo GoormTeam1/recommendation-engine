@@ -8,24 +8,24 @@ import json
 r = redis.Redis(host='localhost', port=6379, db=0)
 
 # 카테고리 매핑 리스트
-CATEGORIES = ['US',
-              'World',
-              'Pollitics',
-              'Business',
-              'Heallth',
-              'Entertainment',
-              'Style',
-              'Travel',
-              'Sports',
-              'Science',
-              'Climate',
-              'Weather']
+CATEGORIES = ['us',
+              'world',
+              'politics',
+              'business',
+              'health',
+              'entertainment',
+              'style',
+              'travel',
+              'sports',
+              'science',
+              'climate',
+              'weather']
 
 # 오늘 날짜를 'YYYY-MM-DD' 형식으로 가져옴
 today_str = date.today().isoformat()  # 예: '2025-05-02'
 
 # 경로 조합
-csv_path = os.path.join("../data", today_str, "recommendations.csv")
+csv_path = os.path.join("data", today_str, "recommendations.csv")
 
 # CSV 읽기
 df = pd.read_csv(csv_path)

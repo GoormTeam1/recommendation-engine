@@ -8,22 +8,22 @@ import json
 r = redis.Redis(host='localhost', port=6379, db=0)
 
 # 카테고리 매핑 리스트
-CATEGORIES = ['US',
-              'World',
-              'Pollitics',
-              'Business',
-              'Heallth',
-              'Entertainment',
-              'Style',
-              'Travel',
-              'Sports',
-              'Science',
-              'Climate',
-              'Weather']
+CATEGORIES = ['us',
+              'world',
+              'politics',
+              'business',
+              'health',
+              'entertainment',
+              'style',
+              'travel',
+              'sports',
+              'science',
+              'climate',
+              'weather']
 
 def import_default_recommendation_data():
     today_str = date.today().isoformat()
-    csv_path = os.path.join("../data", today_str, "news.csv")
+    csv_path = os.path.join("data", today_str, "news.csv")
 
     # CSV 읽기
     df = pd.read_csv(csv_path)

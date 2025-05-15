@@ -24,7 +24,7 @@ users = pd.read_csv(USER_CSV).rename(columns={'id': 'user_id'})
 news = pd.read_csv(NEWS_CSV, parse_dates=['published_at'])
 interests = pd.read_csv(INTEREST_CSV).rename(columns={'category_id': 'category'})
 
-# 2. 사용자 나이 계산 (birth_date → age)
+# 2. 사용자 나이 계산
 def calculate_age(birth_str):
     birth = pd.to_datetime(birth_str)
     today = datetime.today()
@@ -32,12 +32,16 @@ def calculate_age(birth_str):
 
 users['age'] = users['birth_date'].apply(calculate_age)
 
-# 3. news_view_count 결측값 처리 및 log 변환
+#  최근 2주 뉴스로 필터링
+cutoff = pd.Timestamp.now().normalize() - pd.Timedelta(days=14)
+news = news[news['published_at'] >= cutoff]
+
+# 3. 조회수 로그 변환
 if 'news_view_count' not in news.columns:
     news['news_view_count'] = 0
 news['news_view_count'] = np.log1p(news['news_view_count'])
 
-# 4. 사용자 × 뉴스 조합 생성 + 흥미 여부 계산
+# 4. 사용자 × 뉴스 조합 생성
 candidate_rows = []
 for _, user in users.iterrows():
     user_id = user['user_id']
@@ -74,16 +78,17 @@ if not os.path.exists(MODEL_PATH):
 with open(MODEL_PATH, 'rb') as f:
     model = pickle.load(f)
 
-# 7. 예측 + 최신 가중치 계산
+# 7. 예측 + 최신 가중치 적용
 feature_cols = ['gender', 'level', 'category', 'age', 'interest_match', 'news_view_count']
 df_pred['score'] = model.predict(df_pred[feature_cols])
 
+# 날짜 기준 최신 가중치 계산 (1 / (1 + days_ago))
 today = pd.Timestamp.now().normalize()
 df_pred['days_ago'] = (today - df_pred['published_at'].dt.normalize()).dt.days
 df_pred['recency_weight'] = 1 / (1 + df_pred['days_ago'])
 df_pred['adjusted_score'] = df_pred['score'] * df_pred['recency_weight']
 
-# 8. 사용자별 추천 (관심 뉴스 7개 + 비관심 뉴스 3개 → 최대 10개)
+# 8. 사용자별 추천 생성
 top_n_interest = 7
 top_n_non_interest = 3
 total_n = 10
@@ -95,6 +100,7 @@ for user_id, group in df_pred.groupby('user_id'):
     non_interest_df = group[group['interest_match'] == 0].sort_values(by='adjusted_score', ascending=False).head(top_n_non_interest)
     combined = pd.concat([interest_df, non_interest_df])
 
+    # 부족한 경우 추가 보충
     if len(combined) < total_n:
         already_recommended = set(combined['news_id'])
         remaining_df = group[~group['news_id'].isin(already_recommended)]
